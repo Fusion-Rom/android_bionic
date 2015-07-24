@@ -29,4 +29,4 @@
 // Indicate which memcpy base file to include.
 #define MEMCPY_BASE "memcpy_base.S"
 
-#include "__strcat_chk_common.S"
+#include "memcpy_common.S"
