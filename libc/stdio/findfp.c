@@ -169,7 +169,7 @@ _cleanup(void)
 void
 __sinit(void)
 {
-        size_t i;
+	size_t i;
 	_THREAD_PRIVATE_MUTEX(__sinit_mutex);
 
 	_THREAD_PRIVATE_MUTEX_LOCK(__sinit_mutex);

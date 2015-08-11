@@ -116,8 +116,6 @@ libc_bionic_src_files := \
     bionic/__errno.cpp \
     bionic/eventfd_read.cpp \
     bionic/eventfd_write.cpp \
-    bionic/fchmod.cpp \
-    bionic/fchmodat.cpp \
     bionic/ffs.cpp \
     bionic/flockfile.cpp \
     bionic/fork.cpp \
@@ -505,7 +503,6 @@ libc_arch_static_src_files := \
 libc_common_cflags := \
     -D_LIBC=1 \
     -Wall -Wextra -Wunused \
-    -fno-strict-aliasing \
 
 ifneq ($(TARGET_USES_LOGD),false)
 libc_common_cflags += -DTARGET_USES_LOGD
@@ -557,7 +554,7 @@ endif
 
 # Define some common conlyflags
 libc_common_conlyflags := \
-    -std=gnu11
+    -std=gnu99
 
 # Define some common cppflags
 libc_common_cppflags := \
@@ -858,7 +855,8 @@ LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_cxa
-LOCAL_CLANG := $(use_clang)
+# GCC refuses to hide new/delete
+LOCAL_CLANG := true
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 

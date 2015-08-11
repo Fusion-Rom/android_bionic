@@ -311,8 +311,6 @@ do { 								\
 #define MATCH(x, y, w) 							\
 	((x) == (y) || (/*CONSTCOND*/(w) && ((x) == ANY || (y) == ANY)))
 
-extern int _cached_hosts_lookup(const char *name, const struct addrinfo *pai, struct addrinfo **retval);
-
 const char *
 gai_strerror(int ecode)
 {
@@ -1546,7 +1544,7 @@ _get_scope(const struct sockaddr *addr)
 
 /* RFC 4380, section 2.6 */
 #define IN6_IS_ADDR_TEREDO(a)	 \
-	(((a)->s6_addr32[0]) == ntohl(0x20010000))
+	((*(const uint32_t *)(const void *)(&(a)->s6_addr[0]) == ntohl(0x20010000)))
 
 /* RFC 3056, section 2. */
 #define IN6_IS_ADDR_6TO4(a)	 \
@@ -2112,14 +2110,6 @@ _files_getaddrinfo(void *rv, void *cb_data, va_list ap)
 
 	name = va_arg(ap, char *);
 	pai = va_arg(ap, struct addrinfo *);
-
-	struct addrinfo *_cache_rv;
-	if (_cached_hosts_lookup(name, pai, &_cache_rv) == 0) {
-		*((struct addrinfo **)rv) = _cache_rv;
-		if (!_cache_rv)
-			return NS_NOTFOUND;
-		return NS_SUCCESS;
-	}
 
 //	fprintf(stderr, "_files_getaddrinfo() name = '%s'\n", name);
 	memset(&sentinel, 0, sizeof(sentinel));

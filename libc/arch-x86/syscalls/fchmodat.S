@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(__fchmodat)
+ENTRY(fchmodat)
     pushl   %ebx
     .cfi_def_cfa_offset 8
     .cfi_rel_offset ebx, 0
@@ -12,9 +12,13 @@ ENTRY(__fchmodat)
     pushl   %edx
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset edx, 0
-    mov     16(%esp), %ebx
-    mov     20(%esp), %ecx
-    mov     24(%esp), %edx
+    pushl   %esi
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset esi, 0
+    mov     20(%esp), %ebx
+    mov     24(%esp), %ecx
+    mov     28(%esp), %edx
+    mov     32(%esp), %esi
     movl    $__NR_fchmodat, %eax
     int     $0x80
     cmpl    $-MAX_ERRNO, %eax
@@ -24,8 +28,9 @@ ENTRY(__fchmodat)
     call    __set_errno_internal
     addl    $4, %esp
 1:
+    popl    %esi
     popl    %edx
     popl    %ecx
     popl    %ebx
     ret
-END(__fchmodat)
+END(fchmodat)
